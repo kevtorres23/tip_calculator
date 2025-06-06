@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { Platform, StyleSheet, View, Text, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { verifyInstallation } from 'nativewind';
 import TotalCard from '@/components/TotalCard';
 import InputBill from '@/components/InputBill';
@@ -8,19 +8,41 @@ import ChooseTip from '@/components/ChooseTip';
 import SplitTotal from '@/components/SplitTotal';
 
 export default function HomeScreen() {
-  verifyInstallation();
+  const [totalBill, setTotalBill] = useState(0);
+  const [selectedTip, setSelectedTip] = useState(0);
+  const [totalTip, setTotalTip] = useState(0);
+  const [indTotal, setIndTotal] = useState(0);
+
+  // actualizar dinámicamente el total de la propina cada vez que totalBill o selectedTip cambia
+  useEffect(() => {
+    let tipApplied = Number((totalBill * (selectedTip / 100)).toFixed(3));
+    setTotalTip(tipApplied);
+  }, [totalBill, selectedTip])
+
+  function changeTotalTip(tip: number) {
+    setSelectedTip(tip);
+  }
+
+  function changeTotalBill(value: string) {
+    setTotalBill(Number(value));
+  }
+
+  function changeIndTotal(people: number) {
+    let total = Number(((totalBill + totalTip)/people).toFixed(2));
+    setIndTotal(total);
+  }
 
   return (
     <SafeAreaView style={styles.safe} className='bg-slate-100 items-center justify-start'>
       <View className="flex-1 items-center justify-center w-screen bg-slate-100 px-8 gap-10">
 
-        <TotalCard totalPerPerson={0} totalBill={0} totalTip={0}/>
+        <TotalCard totalPerPerson={indTotal} totalBill={totalBill} totalTip={totalTip} />
 
-        <InputBill/>
+        <InputBill amountChange={changeTotalBill} />
 
-        <ChooseTip/>
+        <ChooseTip tipChange={changeTotalTip} />
 
-        <SplitTotal/>
+        <SplitTotal numberChange={changeIndTotal}/>
       </View>
     </SafeAreaView>
   );
@@ -29,7 +51,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? 50 : 20,
+    paddingTop: Platform.OS === "android" ? 20 : 20,
     paddingBottom: 20,
     paddingHorizontal: 20
   },
