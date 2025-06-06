@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Modal, TextInput } from "react-native";
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { useState } from "react";
 
 type ChooseTipProps = {
@@ -7,9 +8,10 @@ type ChooseTipProps = {
 }
 
 function ChooseTip(props: ChooseTipProps) {
-    const [tip1, setTip1] = useState(10);
-    const [tip2, setTip2] = useState(15);
-    const [tip3, setTip3] = useState(20);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [tip1, setTip1] = useState("10");
+    const [tip2, setTip2] = useState("15");
+    const [tip3, setTip3] = useState("20");
     const [tipOnePressed, setTipOnePressed] = useState(false);
     const [tipTwoPressed, setTipTwoPressed] = useState(false);
     const [tipThreePressed, setTipThreePressed] = useState(false);
@@ -18,21 +20,21 @@ function ChooseTip(props: ChooseTipProps) {
         setTipOnePressed(true);
         setTipTwoPressed(false);
         setTipThreePressed(false);
-        props.tipChange(tip1);
+        props.tipChange(Number(tip1));
     }
 
     function tip2Pressed() {
         setTipOnePressed(false);
         setTipTwoPressed(true);
         setTipThreePressed(false);
-        props.tipChange(tip2);
+        props.tipChange(Number(tip2));
     }
 
     function tip3Pressed() {
         setTipOnePressed(false);
         setTipTwoPressed(false);
         setTipThreePressed(true);
-        props.tipChange(tip3);
+        props.tipChange(Number(tip3));
     }
 
     return (
@@ -61,9 +63,37 @@ function ChooseTip(props: ChooseTipProps) {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <TouchableOpacity className="flex w-full h-auto py-3 px-4 bg-indigo-500 items-center justify-center rounded-xl">
-                    <Text className="text-white font-bold">Custom Tip</Text>
+                <TouchableOpacity onPressOut={() => setModalVisible(!modalVisible)} className="flex w-full h-auto py-3 px-4 bg-indigo-500 items-center justify-center rounded-xl">
+                    <View className="flex-row gap-2 items-center justify-center">
+                        <AntDesign name="edit" size={18} color="white" />
+                        <Text className="text-white font-bold text-lg">Custom tips</Text>
+                    </View>
                 </TouchableOpacity>
+
+                <Modal
+                    className="modal w-full h-full items-center justify-center"
+                    animationType="slide"
+                    transparent={false}
+                    backdropColor={"transparent"}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}>
+                    <View className="items-center justify-center w-full h-full">
+                        <View className="bg-white px-6 py-6 rounded-2xl border border-slate-300 gap-4 flex-col">
+                            <Text className="font-medium text-lg text-slate-700">Change here the tip percentages</Text>
+                            <View className="flex flex-row gap-3">
+                                <TextInput value={tip1} onChangeText={setTip1} className="flex-1 w-auto py-2 bg-slate-50 border border-slate-200 rounded-lg"></TextInput>
+                                <TextInput value={tip2} onChangeText={setTip2} className="flex-1 w-auto py-2 bg-slate-50 border border-slate-200 rounded-lg"></TextInput>
+                                <TextInput value={tip3} onChangeText={setTip3} className="flex-1 w-auto py-2 bg-slate-50 border border-slate-200 rounded-lg"></TextInput>
+                            </View>
+                            <TouchableOpacity className="bg-indigo-500 flex-row items-center gap-2 justify-center py-2 rounded-lg" onPress={() => setModalVisible(!modalVisible)}>
+                                <AntDesign name="check" size={18} color="white" />
+                                <Text className="text-white font-medium">Save tips</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
             </View>
         </View>
     )
