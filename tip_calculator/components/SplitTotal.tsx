@@ -23,7 +23,7 @@ function SplitTotal(props: splitTotalProps) {
     props.numberChange(splitNum)
 
     return (
-        <View className="w-full h-auto flex-row gap-8 items-center">
+        <View className="w-full h-auto flex-row gap-6 items-center">
             <View className="flex-col gap-0">
                 <Text className="font-semibold text-slate-800 text-lg">
                     Split

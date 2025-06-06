@@ -12,7 +12,7 @@ function InputBill(props: InputBillProps) {
     props.amountChange(billValue);
 
     return (
-        <View className="w-full h-auto flex-row gap-8 items-center">
+        <View className="w-full h-auto flex-row gap-6 items-center">
             <View>
                 <Text className="font-medium text-slate-800 text-lg">
                     Enter
