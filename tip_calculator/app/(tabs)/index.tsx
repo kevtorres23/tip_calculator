@@ -1,11 +1,16 @@
-import { Image } from 'expo-image';
 import { Platform, StyleSheet, View, Text, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
 import { useState, useEffect } from 'react';
-import { verifyInstallation } from 'nativewind';
 import TotalCard from '@/components/TotalCard';
 import InputBill from '@/components/InputBill';
 import ChooseTip from '@/components/ChooseTip';
 import SplitTotal from '@/components/SplitTotal';
+
+type CountryInfo = {
+  pais: string | undefined,
+  minimo: number | undefined,
+  maximo: number | undefined,
+  comentario: string | undefined,
+}
 
 export default function HomeScreen() {
   const [totalBill, setTotalBill] = useState(0);
@@ -34,15 +39,18 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safe} className='bg-slate-100 items-center justify-start'>
-      <View className="flex-1 items-center justify-center w-screen bg-slate-100 px-8 gap-10">
+      <View className="flex-1 items-center justify-center w-screen bg-slate-100 px-8 gap-8">
+
+        <Text className='font-bold text-3xl text-center px-10 text-slate-700'>Calculadora de Propinas</Text>
 
         <TotalCard totalPerPerson={indTotal} totalBill={totalBill} totalTip={totalTip} />
 
         <InputBill amountChange={changeTotalBill} />
 
-        <ChooseTip tipChange={changeTotalTip} />
+        <ChooseTip tipChange={changeTotalTip}/>
 
         <SplitTotal numberChange={changeIndTotal}/>
+
       </View>
     </SafeAreaView>
   );
@@ -51,7 +59,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    paddingTop: Platform.OS === "android" ? 20 : 20,
+    paddingTop: Platform.OS === "android" ? 0 : 20,
     paddingBottom: 20,
     paddingHorizontal: 20
   },

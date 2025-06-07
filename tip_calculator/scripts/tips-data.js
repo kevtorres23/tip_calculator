@@ -1,4 +1,4 @@
-export default countryTips = [
+const countryTips = [
     {
         "pais": "México",
         "minimo": 10,
@@ -59,4 +59,6 @@ export default countryTips = [
         "maximo": 10,
         "comentario": "La propina no es obligatoria, pero se aprecia entre 5% y 10% en restaurantes formales."
     }
-]
+];
+
+export default countryTips;

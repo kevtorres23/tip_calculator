@@ -1,6 +1,6 @@
 import React from "react";
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
 type splitTotalProps = {
@@ -10,9 +10,15 @@ type splitTotalProps = {
 function SplitTotal(props: splitTotalProps) {
     const [splitNum, setSplitNum] = useState(1);
 
+    useEffect(() => {
+        props.numberChange(splitNum);
+    })
+
     function decrement() {
         if (splitNum > 1) {
             setSplitNum((prevNum) => prevNum - 1)
+        } else {
+            return;
         }
     }
 
@@ -20,16 +26,14 @@ function SplitTotal(props: splitTotalProps) {
         setSplitNum((prevNum) => prevNum + 1)
     }
 
-    props.numberChange(splitNum)
-
     return (
-        <View className="w-full h-auto flex-row gap-6 items-center">
-            <View className="flex-col gap-0">
+        <View className="w-full h-auto flex-row gap-4 items-center">
+            <View className="flex-col gap-0 w-20">
                 <Text className="font-semibold text-slate-800 text-lg">
-                    Split
+                    Divide
                 </Text>
                 <Text className="font-normal text-slate-800 text-lg">
-                    the total
+                    el total
                 </Text>
             </View>
             <View className="flex-1 w-full flex-row">
@@ -42,10 +46,10 @@ function SplitTotal(props: splitTotalProps) {
                     <Text className="w-full h-auto py-3 flex text-center text-slate-700 bg-white font-bold text-xl shadow-[0_3px_10px_rgb(0,0,0,0.2)] border border-gray-200">
                         {splitNum}
                         {splitNum > 1 && (
-                            <Text className="text-lg font-medium text-slate-500"> people</Text>
+                            <Text className="text-lg font-medium text-slate-500"> personas</Text>
                         )}
                         {splitNum === 1 && (
-                            <Text className="text-lg font-medium text-slate-500"> person</Text>
+                            <Text className="text-lg font-medium text-slate-500"> persona</Text>
                         )}
                     </Text>
                 </View>
