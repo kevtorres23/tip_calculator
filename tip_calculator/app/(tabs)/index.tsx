@@ -5,13 +5,6 @@ import InputBill from '@/components/InputBill';
 import ChooseTip from '@/components/ChooseTip';
 import SplitTotal from '@/components/SplitTotal';
 
-type CountryInfo = {
-  pais: string | undefined,
-  minimo: number | undefined,
-  maximo: number | undefined,
-  comentario: string | undefined,
-}
-
 export default function HomeScreen() {
   const [totalBill, setTotalBill] = useState(0);
   const [selectedTip, setSelectedTip] = useState(0);

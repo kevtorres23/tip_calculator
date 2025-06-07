@@ -100,7 +100,7 @@ function ChooseTip(props: ChooseTipProps) {
                         onValueChange={(itemValue, itemIndex) =>
                             setSelecCountry(itemValue)
                         }>
-                        <Picker.Item key={1} label="Select a country..." value="" />
+                        <Picker.Item key={1} label="Selecciona un país..." value="" />
                         {countryTips.map((data, key) => (
                             <Picker.Item key={key} label={data.pais} value={data.pais} />
                         ))}
