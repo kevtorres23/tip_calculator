@@ -1,9 +1,10 @@
-import { Platform, StyleSheet, View, Text, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
+import { Platform, StyleSheet, View, Text, SafeAreaView, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { useState, useEffect } from 'react';
 import TotalCard from '@/components/TotalCard';
 import InputBill from '@/components/InputBill';
 import ChooseTip from '@/components/ChooseTip';
 import SplitTotal from '@/components/SplitTotal';
+import WelcomeUser from '@/components/WelcomeUser';
 
 export default function HomeScreen() {
   const [totalBill, setTotalBill] = useState(0);
@@ -26,25 +27,25 @@ export default function HomeScreen() {
   }
 
   function changeIndTotal(people: number) {
-    let total = Number(((totalBill + totalTip)/people).toFixed(2));
+    let total = Number(((totalBill + totalTip) / people).toFixed(2));
     setIndTotal(total);
   }
 
   return (
-    <SafeAreaView style={styles.safe} className='bg-slate-100 items-center justify-start'>
-      <View className="flex-1 items-center justify-center w-screen bg-slate-100 px-8 gap-8">
+    <SafeAreaView style={styles.safe} className='bg-slate-100 items-center justify-center'>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View className="flex-1 items-center justify-center w-screen bg-slate-100 px-8 gap-8">
 
-        <Text className='font-bold text-3xl text-center px-10 text-slate-700'>Calculadora de Propinas</Text>
+          <TotalCard totalPerPerson={indTotal} totalBill={totalBill} totalTip={totalTip} />
 
-        <TotalCard totalPerPerson={indTotal} totalBill={totalBill} totalTip={totalTip} />
+          <InputBill amountChange={changeTotalBill} />
 
-        <InputBill amountChange={changeTotalBill} />
+          <ChooseTip tipChange={changeTotalTip} />
 
-        <ChooseTip tipChange={changeTotalTip}/>
+          <SplitTotal numberChange={changeIndTotal} />
 
-        <SplitTotal numberChange={changeIndTotal}/>
-
-      </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -54,6 +55,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: Platform.OS === "android" ? 0 : 20,
     paddingBottom: 20,
-    paddingHorizontal: 20
   },
+
+  scrollView: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 0,
+    paddingVertical: 20,
+    width: "auto",
+  }
 });
