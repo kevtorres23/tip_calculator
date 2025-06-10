@@ -10,10 +10,6 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
   const [isUsersModa, setIsUsersModal] = useState(false);
 
-  function handleUserSettings() {
-    setIsUsersModal(!setIsUsersModal);
-  }
-
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Tabs
@@ -52,17 +48,6 @@ export default function TabLayout() {
             headerShown: true,
             tabBarIcon: ({ color }) => (
               <Ionicons name="time-outline" size={24} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="users"
-          options={{
-            title: "Usuarios",
-            headerTitle: "Usuarios",
-            headerShown: true,
-            tabBarIcon: ({ color }) => (
-              <Ionicons name="people-outline" size={24} color={color} />
             ),
           }}
         />
