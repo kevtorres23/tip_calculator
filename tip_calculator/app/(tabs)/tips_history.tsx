@@ -20,7 +20,7 @@ export default function TipsHistory() {
                 <View className="flex-1 items-center justify-center w-screen px-8 gap-8">
                     {isHistory === false && (
                         <View className='items-center justify-center gap-4'>
-                            <Text className='text-xl text-center font-medium text-slate-500'>Aún no has guardado un cálculo de propinas</Text>
+                            <Text className='text-xl px-10 text-center font-medium text-slate-500'>Aún no has guardado un cálculo de propinas</Text>
                             <Ionicons name="wallet-outline" size={64} color="#94a3b8"/>
                         </View>
                     )}

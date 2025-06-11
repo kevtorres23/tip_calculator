@@ -5,16 +5,17 @@ import TotalCard from '@/components/TotalCard';
 import InputBill from '@/components/InputBill';
 import ChooseTip from '@/components/ChooseTip';
 import SplitTotal from '@/components/SplitTotal';
-import WelcomeUser from '@/components/WelcomeUser';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import SaveCalculation from '@/components/SaveCalculation';
 
 export default function HomeScreen() {
   const [totalBill, setTotalBill] = useState(0);
   const [selectedTip, setSelectedTip] = useState(0);
   const [totalTip, setTotalTip] = useState(0);
   const [indTotal, setIndTotal] = useState(0);
+  const [restName, setRestName] = useState("");
   const [isUsername, setIsUsername] = useState(false);
   const [username, setUsername] = useState("");
   const [refreshing, setRefreshing] = useState(false);
@@ -49,7 +50,6 @@ export default function HomeScreen() {
         setUsername(value);
       } else {
         setIsUsername(false);
-        console.log(isUsername);
       }
     } catch (e) {
       console.log(e);
@@ -60,7 +60,6 @@ export default function HomeScreen() {
     try {
       await AsyncStorage.removeItem('username');
       onRefresh();
-      console.log("Hola");
     } catch (e) {
       console.log(e);
     }
@@ -71,8 +70,11 @@ export default function HomeScreen() {
   });
 
   function saveUser() {
-    setUsername(username);
-    storeData(username);
+    if (username !== null) {
+      let newUsername = username.trim();
+      setUsername(newUsername);
+      storeData(newUsername);
+    }
   }
 
   function changeTotalTip(tip: number) {
@@ -94,44 +96,46 @@ export default function HomeScreen() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-          <View className="flex-1 items-center justify-center w-screen bg-slate-100 px-8 gap-8">
+        <View className="flex-1 items-center justify-center w-screen bg-slate-100 px-8 gap-8">
 
-            {isUsername === true && (
-              <View className='flex-row w-full items-center justify-between'>
-                <Text className="text-xl text-slate-700 font-bold">¡Bienvenid@ de vuelta, {username}! 👋</Text>
+          {isUsername === true && (
+            <View className='flex-row w-full items-center justify-between'>
+              <Text className="text-xl text-slate-700 font-bold">¡Bienvenid@ de vuelta, {username}! 👋</Text>
 
-                <TouchableOpacity onPressOut={removeUser} className="gap-2 w-auto px-3 py-2 bg-indigo-500 items-center justify-center rounded-xl">
-                  <Ionicons name="trash-outline" size={18} color="white" />
+              <TouchableOpacity onPressOut={removeUser} className="gap-2 w-auto px-3 py-2 bg-indigo-500 items-center justify-center rounded-xl">
+                <Ionicons name="trash-outline" size={18} color="white" />
+              </TouchableOpacity>
+            </View>
+          )}
+
+
+          {isUsername === false && (
+            <View className='gap-2'>
+              <Text className="text-xl text-slate-700 font-bold">¡Bienvenido!</Text>
+              <View className="flex flex-row w-full gap-3">
+
+                <TextInput placeholder="Enter your name" value={username} onChangeText={setUsername} className="flex-1 text-base bg-white placeholder:text-slate-400 rounded-lg w-full px-4 py-3 font-medium shadow-[0_3px_10px_rgb(0,0,0,0.2)] border border-gray-200">
+                </TextInput>
+
+                <TouchableOpacity onPressOut={saveUser} className="flex-1 flex-row gap-2 w-full py-3 px-4 bg-indigo-500 items-center justify-center rounded-xl">
+                  <AntDesign name="check" size={16} color="white" />
+                  <Text className="text-white font-bold text-base">Guardar nombre</Text>
                 </TouchableOpacity>
               </View>
-            )}
+            </View>
+          )}
 
+          <TotalCard totalPerPerson={indTotal} totalBill={totalBill} totalTip={totalTip} />
 
-            {isUsername === false && (
-              <View className='gap-2'>
-                <Text className="text-xl text-slate-700 font-bold">¡Bienvenido!</Text>
-                <View className="flex flex-row w-full gap-3">
+          <InputBill amountChange={changeTotalBill} />
 
-                  <TextInput placeholder="Enter your name" value={username} onChangeText={setUsername} className="flex-1 text-base bg-white placeholder:text-slate-400 rounded-lg w-full px-4 py-3 font-medium shadow-[0_3px_10px_rgb(0,0,0,0.2)] border border-gray-200">
-                  </TextInput>
+          <ChooseTip tipChange={changeTotalTip} />
 
-                  <TouchableOpacity onPressOut={saveUser} className="flex-1 flex-row gap-2 w-full py-3 px-4 bg-indigo-500 items-center justify-center rounded-xl">
-                    <AntDesign name="check" size={16} color="white" />
-                    <Text className="text-white font-bold text-base">Guardar nombre</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
+          <SplitTotal numberChange={changeIndTotal} />
 
-            <TotalCard totalPerPerson={indTotal} totalBill={totalBill} totalTip={totalTip} />
+          <SaveCalculation />
 
-            <InputBill amountChange={changeTotalBill} />
-
-            <ChooseTip tipChange={changeTotalTip} />
-
-            <SplitTotal numberChange={changeIndTotal} />
-
-          </View>
+        </View>
       </ScrollView>
     </SafeAreaView >
   );

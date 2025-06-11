@@ -5,10 +5,13 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useFonts } from 'expo-font';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const [isUsersModa, setIsUsersModal] = useState(false);
+  const [loaded] = useFonts({
+    Inter: require("../../assets/fonts/Inter/static/")
+  })
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
