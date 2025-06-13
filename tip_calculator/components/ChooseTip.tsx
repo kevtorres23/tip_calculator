@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Modal, TextInput, Image, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Modal, TextInput, StyleSheet } from "react-native";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Picker } from '@react-native-picker/picker';
 import { useState, useEffect } from "react";

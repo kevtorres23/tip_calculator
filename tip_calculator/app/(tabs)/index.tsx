@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, View, Text, SafeAreaView, ScrollView, TouchableOpacity, TextInput, RefreshControl } from 'react-native';
+import { Platform, StyleSheet, View, Text, SafeAreaView, ScrollView, TouchableOpacity, TextInput, RefreshControl, Button } from 'react-native';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import TotalCard from '@/components/TotalCard';
@@ -10,15 +10,30 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import SaveCalculation from '@/components/SaveCalculation';
 
+type calcObject = {
+  restaurant: string,
+  tipPercentage: number,
+  people: number,
+  totalAmount: number,
+}
+
 export default function HomeScreen() {
   const [totalBill, setTotalBill] = useState(0);
   const [selectedTip, setSelectedTip] = useState(0);
   const [totalTip, setTotalTip] = useState(0);
   const [indTotal, setIndTotal] = useState(0);
-  const [restName, setRestName] = useState("");
   const [isUsername, setIsUsername] = useState(false);
   const [username, setUsername] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [numPeople, setNumPeople] = useState(0);
+  const [calcObject, setCalcObject] = useState<calcObject>({
+    restaurant: "",
+    tipPercentage: 0,
+    people: 0,
+    totalAmount: 0,
+  });
+  const [calcList, setCalcList] = useState<calcObject[]>([]);
+
 
   // actualizar dinámicamente el total de la propina cada vez que totalBill o selectedTip cambia
   useEffect(() => {
@@ -33,7 +48,32 @@ export default function HomeScreen() {
     }, 1000)
   }, []);
 
-  const storeData = async (name: string) => {
+  useEffect(() => {
+    getUsers();
+  });
+
+  const storeCalc = async (info: calcObject[]) => {
+    try {
+      const jsonCalc = JSON.stringify(info);
+      await AsyncStorage.setItem('savedCalculations', jsonCalc);
+      onRefresh();
+      alert("¡Se guardó el cálculo de la propina en el historial!")
+      onRefresh();
+    } catch (e) {
+      console.log("Error");
+    }
+  }
+
+  function createCalcObject(restaurantName: string) {
+    const newCalc = { restaurant: restaurantName, tipPercentage: selectedTip, people: numPeople, totalAmount: indTotal };
+    const newList = [...calcList, newCalc]
+    setCalcObject(newCalc);
+    setCalcList(newList);
+    storeCalc(newList);
+    console.log("LISTA:", newList);
+  }
+
+  const storeName = async (name: string) => {
     try {
       await AsyncStorage.setItem('username', name);
       onRefresh();
@@ -42,7 +82,7 @@ export default function HomeScreen() {
     }
   }
 
-  const getData = async () => {
+  const getUsers = async () => {
     try {
       const value = await AsyncStorage.getItem('username');
       if (value !== null) {
@@ -65,15 +105,11 @@ export default function HomeScreen() {
     }
   };
 
-  useEffect(() => {
-    getData();
-  });
-
   function saveUser() {
     if (username !== null) {
       let newUsername = username.trim();
       setUsername(newUsername);
-      storeData(newUsername);
+      storeName(newUsername);
     }
   }
 
@@ -86,6 +122,7 @@ export default function HomeScreen() {
   }
 
   function changeIndTotal(people: number) {
+    setNumPeople(people);
     let total = Number(((totalBill + totalTip) / people).toFixed(2));
     setIndTotal(total);
   }
@@ -100,7 +137,7 @@ export default function HomeScreen() {
 
           {isUsername === true && (
             <View className='flex-row w-full items-center justify-between'>
-              <Text className="text-xl text-slate-700 font-bold">¡Bienvenid@ de vuelta, {username}! 👋</Text>
+              <Text className="text-xl text-slate-800 font-bold">¡Bienvenid@ de vuelta, {username}! 👋</Text>
 
               <TouchableOpacity onPressOut={removeUser} className="gap-2 w-auto px-3 py-2 bg-indigo-500 items-center justify-center rounded-xl">
                 <Ionicons name="trash-outline" size={18} color="white" />
@@ -108,12 +145,10 @@ export default function HomeScreen() {
             </View>
           )}
 
-
           {isUsername === false && (
             <View className='gap-2'>
               <Text className="text-xl text-slate-700 font-bold">¡Bienvenido!</Text>
               <View className="flex flex-row w-full gap-3">
-
                 <TextInput placeholder="Enter your name" value={username} onChangeText={setUsername} className="flex-1 text-base bg-white placeholder:text-slate-400 rounded-lg w-full px-4 py-3 font-medium shadow-[0_3px_10px_rgb(0,0,0,0.2)] border border-gray-200">
                 </TextInput>
 
@@ -121,6 +156,7 @@ export default function HomeScreen() {
                   <AntDesign name="check" size={16} color="white" />
                   <Text className="text-white font-bold text-base">Guardar nombre</Text>
                 </TouchableOpacity>
+
               </View>
             </View>
           )}
@@ -133,8 +169,7 @@ export default function HomeScreen() {
 
           <SplitTotal numberChange={changeIndTotal} />
 
-          <SaveCalculation />
-
+          <SaveCalculation onChangeRestName={createCalcObject} />
         </View>
       </ScrollView>
     </SafeAreaView >

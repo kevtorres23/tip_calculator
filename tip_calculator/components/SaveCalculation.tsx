@@ -1,16 +1,19 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { View, Text, TextInput, Modal, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-function SaveCalculation() {
+type props = {
+    onChangeRestName: (name: string) => void;
+}
+
+function SaveCalculation(props: props) {
     const [modalVisible, setModalVisible] = useState(false);
     const [restaurantName, setRestaurantName] = useState("");
 
-    function saveRestName() {
-        setRestaurantName(restaurantName);
+    function saveCalculation() {
+        props.onChangeRestName(restaurantName);
         setModalVisible(!modalVisible);
-        console.log(restaurantName);
     }
 
     return (
@@ -32,7 +35,7 @@ function SaveCalculation() {
                             </TextInput>
                         </View>
                         <View className="w-full flex-row">
-                            <TouchableOpacity onPressOut={saveRestName} className="flex flex-row gap-2 w-full py-3 px-4 bg-indigo-500 items-center justify-center rounded-xl">
+                            <TouchableOpacity onPressOut={saveCalculation} className="flex flex-row gap-2 w-full py-3 px-4 bg-indigo-500 items-center justify-center rounded-xl">
                                 <Ionicons name="checkmark-outline" size={18} color="white" />
                                 <Text className="text-white font-bold text-base">Guardar cálculo</Text>
                             </TouchableOpacity>
